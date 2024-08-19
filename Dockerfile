@@ -13,12 +13,10 @@ RUN pip install --upgrade pip
 
 RUN pip install img2pdf
 
-RUN mkdir -p \
-    /source \
-    /tmp/source
+RUN mkdir -p /source
 
-WORKDIR /digiport
+WORKDIR /Img2PdfOCR
 
-ADD digiport.sh .
+ADD Img2PdfOCR.sh .
 
-CMD ["/bin/bash","-c","./digiport.sh"]
+CMD ["/bin/bash","-c","./Img2PdfOCR.sh"]

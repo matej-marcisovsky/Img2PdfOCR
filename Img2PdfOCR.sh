@@ -1,7 +1,10 @@
 #! /bin/bash
 
 SOURCE="/source"
-TEMP="/tmp/source"
+TEMP="/tmpfs/source"
+
+rm -rf $TEMP
+mkdir -p $TEMP
 
 for file in "$SOURCE"/*.jpg; do
     [ -f "$file" ] || break
@@ -11,13 +14,13 @@ for file in "$SOURCE"/*.jpg; do
     cp $file $TEMP
     cd $TEMP
 
-    echo -e "\t Optimizing..."
-    jpegoptim --strip-all --quiet $filename
-
     echo -e "\t OCR..."
     convert $filename -threshold 75% $filename.bw
     tesseract $filename.bw $filename.to --oem 1 --psm 11 --dpi 300 -l ces+slk+eng+deu -c textonly_pdf=true pdf
     rm $filename.bw
+
+    echo -e "\t Optimizing..."
+    jpegoptim --strip-all -m 75 --quiet $filename
 done
 
 echo -e "\t Creating PDF..."
